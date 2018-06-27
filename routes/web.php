@@ -35,3 +35,6 @@ Route::get('/cats/breeds/{name}', function ($name) {
 // show câu lệnh sql dùng lệnh: DB::enableQueryLog(); ~ show: dd(DB::getQueryLog());
 
 Route::resource('cat', 'CatController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
