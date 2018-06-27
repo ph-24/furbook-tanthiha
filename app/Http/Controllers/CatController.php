@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Furbook\Http\Requests\CatRequest;
 use Furbook\Cat;
 use Validator;
+use Auth;
 
 class CatController extends Controller
 {
@@ -105,9 +106,14 @@ class CatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cat $cat)
+   public function edit(Cat $cat)
     {
-        return view('cats.edit')->with('cat', $cat);
+        if (! Auth::user()->canEdit($cat)){
+            return redirect()
+                ->route('cat.index')
+                ->withErrors('Permission denied!');
+        }
+        return view('cats.edit')->with('cat',$cat);
     }
 
     /**

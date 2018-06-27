@@ -26,6 +26,11 @@
 				{{Session::get('success')}}
 			</div>
 		@endif
+		@if (Session::has('errors'))
+			<div class="alert alert-warning">
+				{{Session::get('errors')}}
+			</div>
+		@endif
 		@yield('content')
 	</div>
 </body>

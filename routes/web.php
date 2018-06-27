@@ -26,15 +26,20 @@ Route::get('/', function () {
     return redirect('cat');
 });
 
-// Display list cats of breed name
-Route::get('/cats/breeds/{name}', function ($name) {
+Route::group(['middleware' => 'auth'], function(){
+    Route::resource('cat', 'CatController');
+
+    // Display list cats of breed name
+    Route::get('/cats/breeds/{name}', function ($name) {
     $breed = Furbook\Breed::with('cats')->where('name', $name)->first();
     return view('cats.index')->with('breed', $breed)->with('cats', $breed->cats);
+    });
 });
+
+
 
 // show câu lệnh sql dùng lệnh: DB::enableQueryLog(); ~ show: dd(DB::getQueryLog());
 
-Route::resource('cat', 'CatController');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
