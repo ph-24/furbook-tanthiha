@@ -10,21 +10,28 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Input;
 
 Route::get('/', function () {
-	//C1
-    //return view('cats/show')->with('number', 10);
+	// C1
+    // return view('cats/show')->with('number', 10);
 
-    //C2
-    //$number = 10;
-    //return view('cats/show', compact('number'));
+    // C2
+    // $number = 10;
+    // return view('cats/show', compact('number'));
 
-    //C3
-    //return view('cats/show', array('number'=>10));
+    // C3
+    // return view('cats/show', array('number'=>10));
 
-    return redirect('cats');
+    return redirect('cat');
 });
 
-Route::get('cats', function () {
-    return view('cats/index')->with('cats', "<h1>title</h1>");
+// Display list cats of breed name
+Route::get('/cats/breeds/{name}', function ($name) {
+    $breed = Furbook\Breed::with('cats')->where('name', $name)->first();
+    return view('cats.index')->with('breed', $breed)->with('cats', $breed->cats);
 });
+
+// show câu lệnh sql dùng lệnh: DB::enableQueryLog(); ~ show: dd(DB::getQueryLog());
+
+Route::resource('cat', 'CatController');

@@ -1,19 +1,24 @@
 @extends('layouts.master')
 
 @section('header')
-	<a href="{{ url('/') }}">Back to overview</a>
+	<a href="{{ route('cat.index') }}">Back to overview</a>
 	<h2>
 		{{ $cat->name }}
 	</h2>
-	<a href="{{ url('cats/'.$cat->id.'/edit') }}">
+	<a href="{{ route('cat.edit', $cat->id) }}">
 		<span class="glyphicon glyphicon-edit"></span>
 		Edit	
 	</a>
-	<a href="{{ url('cats/'.$cat->id.'/delete') }}">
-		<span class="glyphicon glyphicon-trash"></span>
-		Delete
-	</a>
-	<p>Last edited: {{ $cat->update_at->diffForHumans() }}</p>
+	<form id="form_delete" action="{{route('cat.destroy', $cat->id)}}" method="POST">
+		<input type="hidden" name="_method" value="DELETE">
+    	<input type="hidden" name="_token" value="{{ csrf_token() }}">
+    	
+		<a href="javascript:document.getElementById('form_delete').submit()">
+			<span class="glyphicon glyphicon-trash"></span>
+			Delete
+		</a>
+	</form>
+	<p>Last edited: {{ $cat->updated_at->diffForHumans() }}</p>
 @stop
 
 @section('content')
@@ -24,4 +29,4 @@
 		{{ link_to('cat/breeds/'.$cat->breed->name, $cat->breed->name) }}
 		@endif
 	</p>
-@stop
+@stop\
