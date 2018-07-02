@@ -11,6 +11,17 @@ use Auth;
 
 class CatController extends Controller
 {
+
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('admin')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -66,7 +77,7 @@ class CatController extends Controller
             ],
             [
                 'required' => 'Cột :attribute là bắt buộc.',
-                'max' => 'Cột :attribute độ dài phải nhỏ hơn :size.',
+                'max' => 'Cột :attribute độ dài phải nhỏ hơn :max.',
                 'date_format' => 'Cột :attribute định dạng phải là "Y/m/d".',
                 'numeric' => 'Cột :attribute phải là kiểu số.',
             ]
@@ -74,11 +85,16 @@ class CatController extends Controller
 
         // If data invalid
         if ($validator->fails()) {
-            return redirect('cat.create')
-                    ->withErrors($validator)
-                    ->withInput();
+            return redirect()
+                ->route('cat.create')
+                ->withErrors($validator)
+                ->withInput();
         }
 
+        // Get user_id
+        $user_id = Auth::user()->id;
+        $request->request->add(['user_id' => $user_id]);
+        
         // Insert cat
         $cat=Cat::create($request->all());
 
